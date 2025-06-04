@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步行导航</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .nav-step {
+                @apply bg-white rounded-lg shadow-md p-4 mb-3 transition-all duration-300 hover:shadow-lg;
+            }
+            .nav-step-active {
+                @apply border-l-4 border-primary bg-blue-50;
+            }
+            .map-container {
+                @apply w-full h-[300px] md:h-[400px] rounded-lg shadow-md;
+            }
+            .btn-primary {
+                @apply bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50;
+            }
+            .btn-secondary {
+                @apply bg-secondary hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50;
+            }
+            .input-field {
+                @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300;
+            }
+            .card {
+                @apply bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<!-- 导航栏 -->
+<nav class="bg-white shadow-md fixed top-0 w-full z-50 transition-all duration-300" id="mainNav">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <i class="fa fa-map-marker text-primary text-2xl"></i>
+            <h1 class="text-xl font-bold text-dark">步行导航助手</h1>
+        </div>
+        <div class="hidden md:flex items-center space-x-4">
+            <button class="btn-primary" id="toggleTheme">
+                <i class="fa fa-moon-o"></i>
+            </button>
+            <button class="btn-secondary" id="shareBtn">
+                <i class="fa fa-share-alt mr-1"></i> 分享
+            </button>
+        </div>
+        <button class="md:hidden text-dark text-xl" id="mobileMenuBtn">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+    <!-- 移动端菜单 -->
+    <div class="md:hidden hidden bg-white shadow-lg absolute w-full" id="mobileMenu">
+        <div class="container mx-auto px-4 py-2 flex flex-col space-y-2">
+            <button class="btn-primary py-2 flex items-center justify-center">
+                <i class="fa fa-moon-o mr-2"></i> 切换主题
+            </button>
+            <button class="btn-secondary py-2 flex items-center justify-center">
+                <i class="fa fa-share-alt mr-2"></i> 分享
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- 主要内容 -->
+<main class="container mx-auto px-4 pt-24 pb-16">
+    <!-- 搜索区域 -->
+    <section class="card mb-8">
+        <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+            <i class="fa fa-search text-primary mr-2"></i> 路线规划
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col">
+                <label for="origin" class="text-sm font-medium text-gray-700 mb-1">起点</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fa fa-map-marker text-primary"></i>
+                    </div>
+                    <input type="text" id="origin" class="input-field pl-10" placeholder="输入起点位置">
+                </div>
+            </div>
+            <div class="flex flex-col">
+                <label for="destination" class="text-sm font-medium text-gray-700 mb-1">终点</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fa fa-flag text-red-500"></i>
+                    </div>
+                    <input type="text" id="destination" class="input-field pl-10" placeholder="输入终点位置">
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="useCurrentLocation" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                <label for="useCurrentLocation" class="text-sm text-gray-700">使用当前位置</label>
+            </div>
+            <button class="btn-primary flex items-center" id="searchRouteBtn">
+                <i class="fa fa-location-arrow mr-2"></i> 开始导航
+            </button>
+        </div>
+    </section>
+
+    <!-- 路线信息 -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 左侧：地图 -->
+        <div class="lg:col-span-2">
+            <div class="card h-full">
+                <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                    <i class="fa fa-map text-primary mr-2"></i> 路线地图
+                </h2>
+                <div id="map" class="map-container"></div>
+
+                <!-- 路线统计信息 -->
+                <div class="grid grid-cols-3 gap-4 mt-4">
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <p class="text-sm text-gray-500">总距离</p>
+                        <p class="text-xl font-bold text-primary" id="totalDistance">0 米</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <p class="text-sm text-gray-500">预计时间</p>
+                        <p class="text-xl font-bold text-primary" id="totalDuration">0 分钟</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3 text-center">
+                        <p class="text-sm text-gray-500">步行速度</p>
+                        <p class="text-xl font-bold text-primary">5 公里/小时</p>
+                    </div>
+                </div>
+
+                <!-- 交通状况 -->
+                <div class="mt-4">
+                    <h3 class="text-md font-medium text-gray-700 mb-2">交通状况</h3>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-500 h-2.5 rounded-full" id="trafficStatus" style="width: 100%"></div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1 flex items-center">
+                        <i class="fa fa-info-circle mr-1"></i>
+                        <span id="trafficText">畅通</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧：导航步骤 -->
+        <div class="lg:col-span-1">
+            <div class="card h-full flex flex-col">
+                <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                    <i class="fa fa-directions text-primary mr-2"></i> 导航步骤
+                </h2>
+
+                <!-- 控制按钮 -->
+                <div class="flex justify-between mb-4">
+                    <button class="btn-primary flex-1 mr-2" id="startNavigationBtn">
+                        <i class="fa fa-play mr-1"></i> 开始导航
+                    </button>
+                    <button class="btn-secondary flex-1" id="voiceNavigationBtn">
+                        <i class="fa fa-volume-up mr-1"></i> 语音导航
+                    </button>
+                </div>
+
+                <!-- 步骤列表 -->
+                <div id="navigationSteps" class="overflow-y-auto flex-grow">
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fa fa-map-o text-4xl mb-3"></i>
+                        <p>请输入起点和终点，然后点击"开始导航"</p>
+                    </div>
+                </div>
+
+                <!-- 导航控制 -->
+                <div class="mt-4 pt-4 border-t border-gray-200 flex justify-between">
+                    <button class="btn-primary" id="prevStepBtn" disabled>
+                        <i class="fa fa-arrow-left mr-1"></i> 上一步
+                    </button>
+                    <button class="btn-primary" id="nextStepBtn" disabled>
+                        下一步 <i class="fa fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 其他信息 -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <!-- 预计到达时间 -->
+        <div class="card">
+            <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                <i class="fa fa-clock-o text-primary mr-2"></i> 预计到达时间
+            </h2>
+            <div class="flex items-center justify-center">
+                <div class="text-center">
+                    <p class="text-lg text-gray-500">今天</p>
+                    <p class="text-4xl font-bold text-primary" id="arrivalTime">--:--</p>
+                    <p class="text-sm text-gray-500 mt-1">根据当前步行速度估算</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 路线详情图表 -->
+        <div class="card">
+            <h2 class="text-xl font-bold text-dark mb-4 flex items-center">
+                <i class="fa fa-bar-chart text-primary mr-2"></i> 路线详情
+            </h2>
+            <div class="h-64">
+                <canvas id="routeChart"></canvas>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- 底部导航 -->
+<footer class="bg-dark text-white py-6">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <div class="flex items-center space-x-2">
+                    <i class="fa fa-map-marker text-primary text-2xl"></i>
+                    <h2 class="text-xl font-bold">步行导航助手</h2>
+                </div>
+                <p class="text-gray-400 mt-1 text-sm">为您提供精准的步行路线规划</p>
+            </div>
+            <div class="flex space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                    <i class="fa fa-weibo text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                    <i class="fa fa-wechat text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+                    <i class="fa fa-github text-xl"></i>
+                </a>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+            <p>© 2025 步行导航助手 | 保留所有权利</p>
+        </div>
+    </div>
+</footer>
+
+<!-- 语音提示模态框 -->
+<div id="voiceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 transform transition-all">
+        <div class="text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-primary mb-4">
+                <i class="fa fa-volume-up text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-dark mb-2">语音导航</h3>
+            <p class="text-gray-600 mb-4">当前步骤语音提示</p>
+            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                <p id="voiceMessage" class="text-gray-800">正在准备语音导航...</p>
+            </div>
+            <div class="flex justify-center space-x-4">
+                <button class="btn-primary" id="closeVoiceModal">
+                    <i class="fa fa-times mr-1"></i> 关闭
+                </button>
+                <button class="btn-secondary" id="nextVoiceStep">
+                    <i class="fa fa-arrow-right mr-1"></i> 下一步
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 初始化地图
+    let map = L.map('map').setView([39.90923, 116.397428], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // 当前步骤索引
+    let currentStepIndex = 0;
+    // 导航步骤数据
+    let navigationData = [];
+    // 语音合成对象
+    let speechSynthesis = window.speechSynthesis;
+
+    // DOM元素
+    const originInput = document.getElementById('origin');
+    const destinationInput = document.getElementById('destination');
+    const useCurrentLocationCheckbox = document.getElementById('useCurrentLocation');
+    const searchRouteBtn = document.getElementById('searchRouteBtn');
+    const startNavigationBtn = document.getElementById('startNavigationBtn');
+    const voiceNavigationBtn = document.getElementById('voiceNavigationBtn');
+    const prevStepBtn = document.getElementById('prevStepBtn');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+    const navigationSteps = document.getElementById('navigationSteps');
+    const totalDistanceElement = document.getElementById('totalDistance');
+    const totalDurationElement = document.getElementById('totalDuration');
+    const arrivalTimeElement = document.getElementById('arrivalTime');
+    const trafficStatusElement = document.getElementById('trafficStatus');
+    const trafficTextElement = document.getElementById('trafficText');
+    const voiceModal = document.getElementById('voiceModal');
+    const voiceMessageElement = document.getElementById('voiceMessage');
+    const closeVoiceModalBtn = document.getElementById('closeVoiceModal');
+    const nextVoiceStepBtn = document.getElementById('nextVoiceStep');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mainNav = document.getElementById('mainNav');
+
+    // 事件监听器
+    searchRouteBtn.addEventListener('click', searchRoute);
+    startNavigationBtn.addEventListener('click', startNavigation);
+    voiceNavigationBtn.addEventListener('click', showVoiceNavigation);
+    prevStepBtn.addEventListener('click', goToPreviousStep);
+    nextStepBtn.addEventListener('click', goToNextStep);
+    closeVoiceModalBtn.addEventListener('click', hideVoiceNavigation);
+    nextVoiceStepBtn.addEventListener('click', goToNextStepAndUpdateVoice);
+    mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+    // 监听滚动事件，改变导航栏样式
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+            mainNav.classList.add('py-2');
+            mainNav.classList.remove('py-3');
+        } else {
+            mainNav.classList.add('py-3');
+            mainNav.classList.remove('py-2');
+        }
+    });
+
+    // 搜索路线 - 与后端API交互
+    function searchRoute() {
+        const origin = originInput.value.trim();
+        const destination = destinationInput.value.trim();
+
+        if (!origin && !useCurrentLocationCheckbox.checked) {
+            alert('请输入起点或使用当前位置');
+            return;
+        }
+
+        if (!destination) {
+            alert('请输入终点');
+            return;
+        }
+
+        // 如果使用当前位置，获取经纬度
+        if (useCurrentLocationCheckbox.checked) {
+            if (navigator.geolocation) {
+                searchRouteBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 正在获取当前位置...';
+                searchRouteBtn.disabled = true;
+
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        originInput.value = `${lng},${lat}`;
+
+                        // 继续调用后端API
+                        fetchRouteData(lng, lat, destination);
+                    },
+                    error => {
+                        console.error("获取位置失败:", error);
+                        alert("无法获取当前位置，请手动输入起点");
+                        searchRouteBtn.innerHTML = '<i class="fa fa-location-arrow mr-2"></i> 开始导航';
+                        searchRouteBtn.disabled = false;
+                    }
+                );
+            } else {
+                alert("您的浏览器不支持位置服务，请手动输入起点");
+            }
+            return;
+        }
+
+        // 解析用户输入的地址为经纬度（简化处理，实际应用中应该使用地理编码API）
+        const originCoords = parseCoordinates(origin);
+        const destinationCoords = parseCoordinates(destination);
+
+        if (!originCoords || !destinationCoords) {
+            alert('请输入有效的经纬度坐标（格式：经度,纬度）');
+            return;
+        }
+
+        fetchRouteData(originCoords.lng, originCoords.lat, destination);
+    }
+
+    // 解析经纬度坐标
+    function parseCoordinates(input) {
+        const parts = input.split(',');
+        if (parts.length === 2) {
+            const lng = parseFloat(parts[0].trim());
+            const lat = parseFloat(parts[1].trim());
+            if (!isNaN(lng) && !isNaN(lat)) {
+                return { lng, lat };
+            }
+        }
+        return null;
+    }
+
+    // 调用后端API获取路线数据
+    function fetchRouteData(originLng, originLat, destination) {
+        // 显示加载状态
+        searchRouteBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 正在规划路线...';
+        searchRouteBtn.disabled = true;
+
+        // 调用后端API
+        const apiUrl = `http://localhost:8080/walking?origin=${originLng},${originLat}&destination=${destination}`;
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 处理API响应
+                if (data.status === "1") {
+                    navigationData = data.route.paths[0];
+
+                    // 更新UI
+                    updateRouteInfo();
+                    renderNavigationSteps();
+                    updateChart();
+                    updateMap();
+
+                    // 重置按钮状态
+                    searchRouteBtn.innerHTML = '<i class="fa fa-location-arrow mr-2"></i> 开始导航';
+                    searchRouteBtn.disabled = false;
+                    startNavigationBtn.disabled = false;
+
+                    // 滚动到导航步骤
+                    navigationSteps.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert(`获取路线失败: ${data.info}`);
+                    searchRouteBtn.innerHTML = '<i class="fa fa-location-arrow mr-2"></i> 开始导航';
+                    searchRouteBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('获取路线数据失败:', error);
+                alert('获取路线数据失败，请稍后再试');
+                searchRouteBtn.innerHTML = '<i class="fa fa-location-arrow mr-2"></i> 开始导航';
+                searchRouteBtn.disabled = false;
+            });
+    }
+
+    // 更新路线信息
+    function updateRouteInfo() {
+        const distance = navigationData.distance;
+        const duration = Math.round(navigationData.duration / 60);
+
+        totalDistanceElement.textContent = `${distance} 米`;
+        totalDurationElement.textContent = `${duration} 分钟`;
+
+        // 计算预计到达时间
+        const now = new Date();
+        const arrivalTime = new Date(now.getTime() + navigationData.duration * 1000);
+        arrivalTimeElement.textContent = `${arrivalTime.getHours().toString().padStart(2, '0')}:${arrivalTime.getMinutes().toString().padStart(2, '0')}`;
+
+        // 模拟交通状况（实际应用中应该从API获取）
+        const trafficStatus = Math.floor(Math.random() * 3); // 0-畅通，1-缓行，2-拥堵
+        if (trafficStatus === 0) {
+            trafficStatusElement.style.width = '100%';
+            trafficStatusElement.className = 'bg-green-500 h-2.5 rounded-full';
+            trafficTextElement.textContent = '畅通';
+        } else if (trafficStatus === 1) {
+            trafficStatusElement.style.width = '60%';
+            trafficStatusElement.className = 'bg-yellow-500 h-2.5 rounded-full';
+            trafficTextElement.textContent = '缓行';
+        } else {
+            trafficStatusElement.style.width = '30%';
+            trafficStatusElement.className = 'bg-red-500 h-2.5 rounded-full';
+            trafficTextElement.textContent = '拥堵';
+        }
+    }
+
+    // 渲染导航步骤
+    function renderNavigationSteps() {
+        navigationSteps.innerHTML = '';
+
+        if (!navigationData || !navigationData.steps || navigationData.steps.length === 0) {
+            navigationSteps.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fa fa-exclamation-circle text-4xl mb-3"></i>
+                        <p>未找到有效路线</p>
+                    </div>
+                `;
+            return;
+        }
+
+        navigationData.steps.forEach((step, index) => {
+            const action = ACTION_MAP[step.action] || step.action;
+            const assistantAction = step.assistant_action ?
+                (ACTION_MAP[step.assistant_action] || step.assistant_action) : '';
+            const walkType = WALK_TYPE_MAP[step.walk_type] || '未知道路类型';
+
+            const stepElement = document.createElement('div');
+            stepElement.className = `nav-step ${index === currentStepIndex ? 'nav-step-active' : ''}`;
+            stepElement.setAttribute('data-index', index);
+
+            // 格式化指令
+            const formattedInstruction = step.instruction
+                .replace('然后', '<br>然后')
+                .replace('，', '，<br>');
+
+            stepElement.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center mr-3">
+                            ${index + 1}
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-dark">${step.road || '未知道路'}</h4>
+                            <p class="text-gray-600 mt-1">${formattedInstruction}</p>
+                            <div class="grid grid-cols-2 gap-2 mt-2 text-sm">
+                                <div class="flex items-center text-gray-500">
+                                    <i class="fa fa-arrows-h mr-1"></i> ${step.distance} 米
+                                </div>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="fa fa-clock-o mr-1"></i> ${Math.round(step.duration / 60)} 分钟
+                                </div>
+                            </div>
+                            <div class="mt-2 text-sm">
+                                <div class="flex items-center text-gray-500">
+                                    <i class="fa fa-sign mr-1"></i> ${action}
+                                </div>
+                                ${assistantAction ? `<div class="flex items-center text-gray-500">
+                                    <i class="fa fa-info-circle mr-1"></i> ${assistantAction}
+                                </div>` : ''}
+                                <div class="flex items-center text-gray-500">
+                                    <i class="fa fa-road mr-1"></i> ${walkType}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            stepElement.addEventListener('click', () => goToStep(index));
+            navigationSteps.appendChild(stepElement);
+        });
+
+        // 更新按钮状态
+        updateButtonStates();
+    }
+
+    // 更新图表
+    function updateChart() {
+        if (!navigationData || !navigationData.steps || navigationData.steps.length === 0) {
+            return;
+        }
+
+        const labels = navigationData.steps.map((step, index) => `步骤 ${index + 1}`);
+        const distances = navigationData.steps.map(step => parseInt(step.distance));
+
+        routeChart.data.labels = labels;
+        routeChart.data.datasets[0].data = distances;
+        routeChart.update();
+    }
+
+    // 更新地图
+    function updateMap() {
+        // 清除现有图层
+        map.eachLayer(layer => {
+            if (layer !== map.tileLayers[0]) {
+                map.removeLayer(layer);
+            }
+        });
+
+        // 解析起点和终点坐标
+        const originCoords = parseCoordinates(originInput.value);
+        const destinationCoords = parseCoordinates(destinationInput.value);
+
+        if (!originCoords || !destinationCoords) {
+            // 使用模拟路线点
+            const routePoints = [
+                [39.9823, 116.3031], // 起点
+                [39.9815, 116.3075],
+                [39.9788, 116.3091],
+                [39.9750, 116.3125],
+                [39.9715, 116.3140],
+                [39.9690, 116.3160]  // 终点
+            ];
+
+            // 添加路线
+            const polyline = L.polyline(routePoints, {
+                color: '#3B82F6',
+                weight: 5,
+                opacity: 0.7,
+                lineJoin: 'round'
+            }).addTo(map);
+
+            // 添加起点和终点标记
+            L.marker(routePoints[0]).addTo(map)
+                .bindPopup('<b>起点</b><br>' + originInput.value).openPopup();
+
+            L.marker(routePoints[routePoints.length - 1]).addTo(map)
+                .bindPopup('<b>终点</b><br>' + destinationInput.value);
+
+            // 调整地图视图以适应路线
+            map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+        } else {
+            // 使用实际坐标
+            const routePoints = [
+                [originCoords.lat, originCoords.lng],
+                [destinationCoords.lat, destinationCoords.lng]
+            ];
+
+            // 添加路线
+            const polyline = L.polyline(routePoints, {
+                color: '#3B82F6',
+                weight: 5,
+                opacity: 0.7,
+                lineJoin: 'round'
+            }).addTo(map);
+
+            // 添加起点和终点标记
+            L.marker([originCoords.lat, originCoords.lng]).addTo(map)
+                .bindPopup('<b>起点</b><br>' + originInput.value).openPopup();
+
+            L.marker([destinationCoords.lat, destinationCoords.lng]).addTo(map)
+                .bindPopup('<b>终点</b><br>' + destinationInput.value);
+
+            // 调整地图视图以适应路线
+            map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+        }
+    }
+
+    // 开始导航
+    function startNavigation() {
+        currentStepIndex = 0;
+        renderNavigationSteps();
+        updateButtonStates();
+
+        // 滚动到第一个步骤
+        if (navigationSteps.children.length > 0) {
+            navigationSteps.children[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 语音提示
+        speak(`开始导航，总距离${navigationData.distance}米，预计需要${Math.round(navigationData.duration / 60)}分钟。`);
+    }
+
+    // 前往上一步
+    function goToPreviousStep() {
+        if (currentStepIndex > 0) {
+            currentStepIndex--;
+            renderNavigationSteps();
+            updateButtonStates();
+
+            // 滚动到当前步骤
+            if (navigationSteps.children.length > currentStepIndex) {
+                navigationSteps.children[currentStepIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }
+
+    // 前往下一步
+    function goToNextStep() {
+        if (currentStepIndex < navigationData.steps.length - 1) {
+            currentStepIndex++;
+            renderNavigationSteps();
+            updateButtonStates();
+
+            // 滚动到当前步骤
+            if (navigationSteps.children.length > currentStepIndex) {
+                navigationSteps.children[currentStepIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }
+
+    // 前往指定步骤
+    function goToStep(index) {
+        currentStepIndex = index;
+        renderNavigationSteps();
+        updateButtonStates();
+
+        // 滚动到当前步骤
+        if (navigationSteps.children.length > currentStepIndex) {
+            navigationSteps.children[currentStepIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // 前往下一步并更新语音提示
+    function goToNextStepAndUpdateVoice() {
+        goToNextStep();
+        updateVoiceMessage();
+    }
+
+    // 更新按钮状态
+    function updateButtonStates() {
+        prevStepBtn.disabled = currentStepIndex === 0;
+        nextStepBtn.disabled = currentStepIndex === navigationData.steps.length - 1;
+
+        if (navigationData.steps && navigationData.steps.length > 0) {
+            startNavigationBtn.textContent = '重新导航';
+        }
+    }
+
+    // 显示语音导航模态框
+    function showVoiceNavigation() {
+        if (!navigationData || !navigationData.steps || navigationData.steps.length === 0) {
+            alert('请先规划路线');
+            return;
+        }
+
+        updateVoiceMessage();
+        voiceModal.classList.remove('hidden');
+
+        // 自动朗读当前步骤
+        speakCurrentStep();
+    }
+
+    // 隐藏语音导航模态框
+    function hideVoiceNavigation() {
+        voiceModal.classList.add('hidden');
+        speechSynthesis.cancel();
+    }
+
+    // 更新语音消息
+    function updateVoiceMessage() {
+        if (navigationData.steps && navigationData.steps.length > currentStepIndex) {
+            const step = navigationData.steps[currentStepIndex];
+            const action = ACTION_MAP[step.action] || step.action;
+
+            let message = `第${currentStepIndex + 1}步：${step.instruction}，距离${step.distance}米，预计${Math.round(step.duration / 60)}分钟。`;
+
+            voiceMessageElement.textContent = message;
+        }
+    }
+
+    // 朗读当前步骤
+    function speakCurrentStep() {
+        if (navigationData.steps && navigationData.steps.length > currentStepIndex) {
+            const step = navigationData.steps[currentStepIndex];
+            let message = `第${currentStepIndex + 1}步：${step.instruction}，距离${step.distance}米，预计${Math.round(step.duration / 60)}分钟。`;
+
+            speak(message);
+        }
+    }
+
+    // 语音合成
+    function speak(text) {
+        speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.9;
+
+        speechSynthesis.speak(utterance);
+    }
+
+    // 切换移动菜单
+    function toggleMobileMenu() {
+        mobileMenu.classList.toggle('hidden');
+    }
+</script>
+</body>
+</html>

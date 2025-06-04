@@ -1,0 +1,813 @@
+[
+  {
+    "id": 1,
+    "name": "Pizza Margherita",
+    "origin": "Italy",
+    "type": "Main Course",
+    "ingredients": ["Tomato sauce", "Mozzarella cheese", "Basil", "Olive oil"],
+    "calories": 850
+  },
+  {
+    "id": 2,
+    "name": "Sushi",
+    "origin": "Japan",
+    "type": "Main Course",
+    "ingredients": ["Rice", "Raw fish", "Seaweed", "Soy sauce"],
+    "calories": 300
+  },
+  {
+    "id": 3,
+    "name": "Chocolate Cake",
+    "origin": "Global",
+    "type": "Dessert",
+    "ingredients": ["Flour", "Sugar", "Cocoa powder", "Eggs", "Butter"],
+    "calories": 450
+  },
+  {
+    "id": 4,
+    "name": "Hamburger",
+    "origin": "United States",
+    "type": "Main Course",
+    "ingredients": ["Beef patty", "Bun", "Lettuce", "Tomato", "Cheese"],
+    "calories": 600
+  },
+  {
+    "id": 5,
+    "name": "Pad Thai",
+    "origin": "Thailand",
+    "type": "Main Course",
+    "ingredients": ["Rice noodles", "Shrimp", "Tofu", "Peanuts", "Egg"],
+    "calories": 400
+  },
+  {
+    "id": 6,
+    "name": "Tiramisu",
+    "origin": "Italy",
+    "type": "Dessert",
+    "ingredients": ["Ladyfingers", "Mascarpone cheese", "Coffee", "Cocoa powder"],
+    "calories": 500
+  },
+  {
+    "id": 7,
+    "name": "Tacos",
+    "origin": "Mexico",
+    "type": "Main Course",
+    "ingredients": ["Tortilla", "Beef", "Lettuce", "Cheese", "Salsa"],
+    "calories": 350
+  },
+  {
+    "id": 8,
+    "name": "Croissant",
+    "origin": "France",
+    "type": "Breakfast",
+    "ingredients": ["Flour", "Butter", "Yeast", "Milk", "Sugar"],
+    "calories": 280
+  },
+  {
+    "id": 9,
+    "name": "Pho",
+    "origin": "Vietnam",
+    "type": "Soup",
+    "ingredients": ["Beef broth", "Rice noodles", "Beef", "Herbs", "Bean sprouts"],
+    "calories": 450
+  },
+  {
+    "id": 10,
+    "name": "Moussaka",
+    "origin": "Greece",
+    "type": "Main Course",
+    "ingredients": ["Eggplant", "Ground lamb", "Tomato sauce", "Bechamel sauce"],
+    "calories": 550
+  },
+
+  {
+    "id": 11,
+    "name": "Paella",
+    "origin": "Spain",
+    "type": "Main Course",
+    "ingredients": ["Rice", "Saffron", "Seafood", "Chicken", "Bell peppers"],
+    "calories": 620
+  },
+  {
+    "id": 12,
+    "name": "Dim Sum",
+    "origin": "China",
+    "type": "Appetizer",
+    "ingredients": ["Dumpling wrappers", "Pork", "Shrimp", "Ginger", "Soy sauce"],
+    "calories": 200
+  },
+  {
+    "id": 13,
+    "name": "Poutine",
+    "origin": "Canada",
+    "type": "Snack",
+    "ingredients": ["French fries", "Cheese curds", "Gravy"],
+    "calories": 700
+  },
+  {
+    "id": 14,
+    "name": "Baklava",
+    "origin": "Turkey",
+    "type": "Dessert",
+    "ingredients": ["Phyllo dough", "Nuts", "Honey", "Butter"],
+    "calories": 480
+  },
+  {
+    "id": 15,
+    "name": "Fish and Chips",
+    "origin": "United Kingdom",
+    "type": "Main Course",
+    "ingredients": ["White fish", "Potatoes", "Beer batter", "Tartar sauce"],
+    "calories": 900
+  },
+  {
+    "id": 16,
+    "name": "Kimchi",
+    "origin": "Korea",
+    "type": "Side Dish",
+    "ingredients": ["Napa cabbage", "Chili powder", "Garlic", "Ginger", "Fish sauce"],
+    "calories": 50
+  },
+  {
+    "id": 17,
+    "name": "Ramen",
+    "origin": "Japan",
+    "type": "Soup",
+    "ingredients": ["Wheat noodles", "Pork broth", "Egg", "Green onions", "Pork belly"],
+    "calories": 550
+  },
+  {
+    "id": 18,
+    "name": "Gelato",
+    "origin": "Italy",
+    "type": "Dessert",
+    "ingredients": ["Milk", "Sugar", "Fruit puree", "Egg yolks"],
+    "calories": 320
+  },
+  {
+    "id": 19,
+    "name": "Falafel",
+    "origin": "Middle East",
+    "type": "Appetizer",
+    "ingredients": ["Chickpeas", "Garlic", "Cumin", "Parsley", "Tahini"],
+    "calories": 350
+  },
+  {
+    "id": 20,
+    "name": "Beef Wellington",
+    "origin": "United Kingdom",
+    "type": "Main Course",
+    "ingredients": ["Beef fillet", "Puff pastry", "Mushrooms", "Prosciutto", "Mustard"],
+    "calories": 1200
+  },
+
+  {
+    "id": 21,
+    "name": "Bibimbap",
+    "origin": "Korea",
+    "type": "Main Course",
+    "ingredients": ["Rice", "Beef", "Vegetables", "Gochujang", "Fried egg"],
+    "calories": 550
+  },
+  {
+    "id": 22,
+    "name": "Ceviche",
+    "origin": "Peru",
+    "type": "Appetizer",
+    "ingredients": ["Raw fish", "Lime juice", "Onion", "Cilantro", "Chili peppers"],
+    "calories": 250
+  },
+  {
+    "id": 23,
+    "name": "Ratatouille",
+    "origin": "France",
+    "type": "Main Course",
+    "ingredients": ["Eggplant", "Zucchini", "Bell peppers", "Tomatoes", "Herbs"],
+    "calories": 300
+  },
+  {
+    "id": 24,
+    "name": "Churros",
+    "origin": "Spain",
+    "type": "Dessert",
+    "ingredients": ["Flour", "Water", "Salt", "Sugar", "Cinnamon"],
+    "calories": 380
+  },
+  {
+    "id": 25,
+    "name": "Lobster Roll",
+    "origin": "United States",
+    "type": "Main Course",
+    "ingredients": ["Lobster meat", "Butter", "Lemon juice", "Mayonnaise", "Hot dog bun"],
+    "calories": 650
+  },
+  {
+    "id": 26,
+    "name": "Döner Kebab",
+    "origin": "Turkey",
+    "type": "Main Course",
+    "ingredients": ["Lamb meat", "Pita bread", "Tomatoes", "Onions", "Yogurt sauce"],
+    "calories": 700
+  },
+  {
+    "id": 27,
+    "name": "Panna Cotta",
+    "origin": "Italy",
+    "type": "Dessert",
+    "ingredients": ["Heavy cream", "Sugar", "Gelatin", "Vanilla", "Berries"],
+    "calories": 420
+  },
+  {
+    "id": 28,
+    "name": "Jollof Rice",
+    "origin": "West Africa",
+    "type": "Main Course",
+    "ingredients": ["Rice", "Tomatoes", "Onions", "Peppers", "Spices"],
+    "calories": 500
+  },
+  {
+    "id": 29,
+    "name": "Pierogi",
+    "origin": "Poland",
+    "type": "Main Course",
+    "ingredients": ["Dough", "Potatoes", "Cheese", "Onions", "Butter"],
+    "calories": 400
+  },
+  {
+    "id": 30,
+    "name": "Miso Soup",
+    "origin": "Japan",
+    "type": "Soup",
+    "ingredients": ["Miso paste", "Tofu", "Seaweed", "Green onions", "Dashi broth"],
+    "calories": 150
+  },
+
+  {
+    "id": 31,
+    "name": "Bánh mì",
+    "origin": "Vietnam",
+    "type": "Sandwich",
+    "ingredients": ["Baguette", "Pork", "Pickled vegetables", "Cilantro", "Chili sauce"],
+    "calories": 450
+  },
+  {
+    "id": 32,
+    "name": "Gazpacho",
+    "origin": "Spain",
+    "type": "Soup",
+    "ingredients": ["Tomatoes", "Cucumber", "Bell peppers", "Garlic", "Olive oil"],
+    "calories": 180
+  },
+  {
+    "id": 33,
+    "name": "Samosa",
+    "origin": "India",
+    "type": "Appetizer",
+    "ingredients": ["Flour", "Potatoes", "Peas", "Spices", "Oil for frying"],
+    "calories": 320
+  },
+  {
+    "id": 34,
+    "name": "Bouillabaisse",
+    "origin": "France",
+    "type": "Soup",
+    "ingredients": ["Fish", "Shellfish", "Tomatoes", "Saffron", "Garlic"],
+    "calories": 380
+  },
+  {
+    "id": 35,
+    "name": "Peking Duck",
+    "origin": "China",
+    "type": "Main Course",
+    "ingredients": ["Duck", "Pancakes", "Hoisin sauce", "Cucumber", "Scallions"],
+    "calories": 850
+  },
+  {
+    "id": 36,
+    "name": "Key Lime Pie",
+    "origin": "United States",
+    "type": "Dessert",
+    "ingredients": ["Key lime juice", "Condensed milk", "Egg yolks", "Graham cracker crust"],
+    "calories": 520
+  },
+  {
+    "id": 37,
+    "name": "Feijoada",
+    "origin": "Brazil",
+    "type": "Main Course",
+    "ingredients": ["Black beans", "Pork", "Beef", "Sausage", "Farofa"],
+    "calories": 900
+  },
+  {
+    "id": 38,
+    "name": "Spanakopita",
+    "origin": "Greece",
+    "type": "Appetizer",
+    "ingredients": ["Phyllo dough", "Spinach", "Feta cheese", "Eggs", "Dill"],
+    "calories": 280
+  },
+  {
+    "id": 39,
+    "name": "Hot Pot",
+    "origin": "China",
+    "type": "Main Course",
+    "ingredients": ["Broth", "Thinly sliced meat", "Vegetables", "Tofu", "Noodles"],
+    "calories": 600
+  },
+  {
+    "id": 40,
+    "name": "Macarons",
+    "origin": "France",
+    "type": "Dessert",
+    "ingredients": ["Almond flour", "Egg whites", "Sugar", "Food coloring", "Ganache"],
+    "calories": 150
+  },
+
+  {
+    "id": 41,
+    "name": "Chicken Tikka Masala",
+    "origin": "India",
+    "type": "Main Course",
+    "ingredients": ["Chicken", "Yogurt", "Tomato sauce", "Cream", "Spices"],
+    "calories": 550
+  },
+  {
+    "id": 42,
+    "name": "Borscht",
+    "origin": "Ukraine",
+    "type": "Soup",
+    "ingredients": ["Beets", "Cabbage", "Potatoes", "Beef", "Sour cream"],
+    "calories": 350
+  },
+  {
+    "id": 43,
+    "name": "Empanadas",
+    "origin": "Argentina",
+    "type": "Appetizer",
+    "ingredients": ["Dough", "Ground beef", "Onions", "Olives", "Hard-boiled eggs"],
+    "calories": 300
+  },
+  {
+    "id": 44,
+    "name": "Shabu-shabu",
+    "origin": "Japan",
+    "type": "Main Course",
+    "ingredients": ["Thinly sliced beef", "Vegetables", "Tofu", "Noodles", "Sesame sauce"],
+    "calories": 700
+  },
+  {
+    "id": 45,
+    "name": "Pavlova",
+    "origin": "Australia/New Zealand",
+    "type": "Dessert",
+    "ingredients": ["Meringue", "Whipped cream", "Fresh fruits", "Passion fruit"],
+    "calories": 400
+  },
+  {
+    "id": 46,
+    "name": "Couscous",
+    "origin": "North Africa",
+    "type": "Main Course",
+    "ingredients": ["Semolina", "Vegetables", "Chicken", "Raisins", "Chickpeas"],
+    "calories": 450
+  },
+  {
+    "id": 47,
+    "name": "Churrasco",
+    "origin": "Brazil",
+    "type": "Main Course",
+    "ingredients": ["Beef cuts", "Salt", "Farofa", "Vinagrete sauce"],
+    "calories": 800
+  },
+  {
+    "id": 48,
+    "name": "Bubble Tea",
+    "origin": "Taiwan",
+    "type": "Drink",
+    "ingredients": ["Tea", "Milk", "Tapioca pearls", "Sugar syrup", "Ice"],
+    "calories": 350
+  },
+  {
+    "id": 49,
+    "name": "Kebab",
+    "origin": "Middle East",
+    "type": "Main Course",
+    "ingredients": ["Lamb meat", "Flatbread", "Tomatoes", "Onions", "Yogurt sauce"],
+    "calories": 600
+  },
+  {
+    "id": 50,
+    "name": "Crème Brûlée",
+    "origin": "France",
+    "type": "Dessert",
+    "ingredients": ["Cream", "Egg yolks", "Sugar", "Vanilla", "Caramelized sugar"],
+    "calories": 450
+  },
+
+  {
+    "id": 51,
+    "name": "Pho Bo",
+    "origin": "Vietnam",
+    "type": "Soup",
+    "ingredients": ["Beef broth", "Rice noodles", "Beef slices", "Bean sprouts", "Thai basil"],
+    "calories": 480
+  },
+  {
+    "id": 52,
+    "name": "Goulash",
+    "origin": "Hungary",
+    "type": "Stew",
+    "ingredients": ["Beef", "Onions", "Paprika", "Potatoes", "Carrots"],
+    "calories": 520
+  },
+  {
+    "id": 53,
+    "name": "Tandoori Chicken",
+    "origin": "India",
+    "type": "Main Course",
+    "ingredients": ["Chicken", "Yogurt", "Tandoori masala", "Lemon juice", "Garlic"],
+    "calories": 380
+  },
+  {
+    "id": 54,
+    "name": "Bak Kut Teh",
+    "origin": "Malaysia/Singapore",
+    "type": "Soup",
+    "ingredients": ["Pork ribs", "Herbal broth", "Garlic", "Mushrooms", "Soy sauce"],
+    "calories": 450
+  },
+  {
+    "id": 55,
+    "name": "Okonomiyaki",
+    "origin": "Japan",
+    "type": "Pancake",
+    "ingredients": ["Flour", "Cabbage", "Eggs", "Pork belly", "Okonomiyaki sauce"],
+    "calories": 600
+  },
+  {
+    "id": 56,
+    "name": "Poutine",
+    "origin": "Canada",
+    "type": "Snack",
+    "ingredients": ["French fries", "Cheese curds", "Gravy", "Optional toppings"],
+    "calories": 750
+  },
+  {
+    "id": 57,
+    "name": "Laksa",
+    "origin": "Malaysia",
+    "type": "Noodle Soup",
+    "ingredients": ["Coconut milk", "Rice noodles", "Shrimp", "Tofu puffs", "Laksa leaves"],
+    "calories": 580
+  },
+  {
+    "id": 58,
+    "name": "Chicken Adobo",
+    "origin": "Philippines",
+    "type": "Main Course",
+    "ingredients": ["Chicken", "Soy sauce", "Vinegar", "Garlic", "Bay leaves"],
+    "calories": 420
+  },
+  {
+    "id": 59,
+    "name": "Bakso",
+    "origin": "Indonesia",
+    "type": "Soup",
+    "ingredients": ["Meatballs", "Noodles", "Beef broth", "Bean sprouts", "Fried shallots"],
+    "calories": 400
+  },
+  {
+    "id": 60,
+    "name": "Kimbap",
+    "origin": "Korea",
+    "type": "Snack",
+    "ingredients": ["Seaweed", "Rice", "Vegetables", "Egg", "Ham or fish cake"],
+    "calories": 350
+  },
+
+  {
+    "id": 61,
+    "name": "Rendang",
+    "origin": "Indonesia",
+    "type": "Main Course",
+    "ingredients": ["Beef", "Coconut milk", "Chilies", "Galangal", "Lemongrass"],
+    "calories": 680
+  },
+  {
+    "id": 62,
+    "name": "Biryani",
+    "origin": "India",
+    "type": "Main Course",
+    "ingredients": ["Basmati rice", "Chicken or lamb", "Yogurt", "Saffron", "Spices"],
+    "calories": 720
+  },
+  {
+    "id": 63,
+    "name": "Fondue",
+    "origin": "Switzerland",
+    "type": "Main Course",
+    "ingredients": ["Cheese", "White wine", "Garlic", "Bread cubes", "Kirsch"],
+    "calories": 850
+  },
+  {
+    "id": 64,
+    "name": "Hainanese Chicken Rice",
+    "origin": "Singapore/Malaysia",
+    "type": "Main Course",
+    "ingredients": ["Chicken", "Rice cooked in chicken broth", "Cucumber", "Ginger sauce", "Chili sauce"],
+    "calories": 600
+  },
+  {
+    "id": 65,
+    "name": "Dakgalbi",
+    "origin": "Korea",
+    "type": "Main Course",
+    "ingredients": ["Chicken", "Gochujang", "Sweet potatoes", "Cabbage", "Rice cakes"],
+    "calories": 550
+  },
+  {
+    "id": 66,
+    "name": "Pide",
+    "origin": "Turkey",
+    "type": "Main Course",
+    "ingredients": ["Dough", "Ground meat", "Vegetables", "Egg", "Spices"],
+    "calories": 480
+  },
+  {
+    "id": 67,
+    "name": "Pastel de Nata",
+    "origin": "Portugal",
+    "type": "Dessert",
+    "ingredients": ["Puff pastry", "Egg custard", "Cinnamon", "Sugar"],
+    "calories": 320
+  },
+  {
+    "id": 68,
+    "name": "Tom Yum Goong",
+    "origin": "Thailand",
+    "type": "Soup",
+    "ingredients": ["Shrimp", "Lemongrass", "Kaffir lime leaves", "Chili", "Mushrooms"],
+    "calories": 280
+  },
+  {
+    "id": 69,
+    "name": "Arepas",
+    "origin": "Venezuela/Colombia",
+    "type": "Main Course",
+    "ingredients": ["Cornmeal", "Water", "Salt", "Cheese", "Various fillings"],
+    "calories": 350
+  },
+  {
+    "id": 70,
+    "name": "Mochi",
+    "origin": "Japan",
+    "type": "Dessert",
+    "ingredients": ["Glutinous rice", "Sugar", "Cornstarch", "Various fillings"],
+    "calories": 200
+  },
+
+  {
+    "id": 71,
+    "name": "Satay",
+    "origin": "Indonesia",
+    "type": "Appetizer",
+    "ingredients": ["Marinated meat", "Peanut sauce", "Coconut milk", "Lemongrass", "Turmeric"],
+    "calories": 320
+  },
+  {
+    "id": 72,
+    "name": "Pierogi",
+    "origin": "Poland",
+    "type": "Main Course",
+    "ingredients": ["Dough", "Potatoes", "Cheese", "Onions", "Butter"],
+    "calories": 380
+  },
+  {
+    "id": 73,
+    "name": "Baozi",
+    "origin": "China",
+    "type": "Snack",
+    "ingredients": ["Flour", "Pork", "Cabbage", "Ginger", "Soy sauce"],
+    "calories": 250
+  },
+  {
+    "id": 74,
+    "name": "Fajitas",
+    "origin": "Mexico",
+    "type": "Main Course",
+    "ingredients": ["Grilled meat", "Bell peppers", "Onions", "Tortillas", "Sour cream"],
+    "calories": 520
+  },
+  {
+    "id": 75,
+    "name": "Katsu Curry",
+    "origin": "Japan",
+    "type": "Main Course",
+    "ingredients": ["Breaded pork cutlet", "Curry sauce", "Rice", "Onions", "Carrots"],
+    "calories": 780
+  },
+  {
+    "id": 76,
+    "name": "Bruschetta",
+    "origin": "Italy",
+    "type": "Appetizer",
+    "ingredients": ["Bread", "Tomatoes", "Garlic", "Basil", "Olive oil"],
+    "calories": 180
+  },
+  {
+    "id": 77,
+    "name": "Lobster Bisque",
+    "origin": "France",
+    "type": "Soup",
+    "ingredients": ["Lobster", "Cream", "Brandy", "Butter", "Herbs"],
+    "calories": 420
+  },
+  {
+    "id": 78,
+    "name": "Shakshuka",
+    "origin": "Middle East",
+    "type": "Breakfast",
+    "ingredients": ["Eggs", "Tomatoes", "Bell peppers", "Onions", "Spices"],
+    "calories": 350
+  },
+  {
+    "id": 79,
+    "name": "Chicken Parmesan",
+    "origin": "Italy",
+    "type": "Main Course",
+    "ingredients": ["Chicken breast", "Tomato sauce", "Mozzarella", "Parmesan", "Bread crumbs"],
+    "calories": 650
+  },
+  {
+    "id": 80,
+    "name": "Malva Pudding",
+    "origin": "South Africa",
+    "type": "Dessert",
+    "ingredients": ["Flour", "Sugar", "Eggs", "Milk", "Apricot jam"],
+    "calories": 480
+  },
+  {
+    "id": 81,
+    "name": "Cioppino",
+    "origin": "United States",
+    "type": "Soup",
+    "ingredients": ["Mixed seafood", "Tomatoes", "White wine", "Garlic", "Herbs"],
+    "calories": 450
+  },
+  {
+    "id": 82,
+    "name": "Aloo Gobi",
+    "origin": "India",
+    "type": "Main Course",
+    "ingredients": ["Potatoes", "Cauliflower", "Turmeric", "Cumin", "Coriander"],
+    "calories": 280
+  },
+  {
+    "id": 83,
+    "name": "Banoffee Pie",
+    "origin": "England",
+    "type": "Dessert",
+    "ingredients": ["Bananas", "Toffee", "Whipped cream", "Biscuit base", "Chocolate"],
+    "calories": 520
+  },
+  {
+    "id": 84,
+    "name": "Carpaccio",
+    "origin": "Italy",
+    "type": "Appetizer",
+    "ingredients": ["Raw beef", "Parmesan", "Arugula", "Lemon juice", "Olive oil"],
+    "calories": 320
+  },
+  {
+    "id": 85,
+    "name": "Dakjuk",
+    "origin": "Korea",
+    "type": "Porridge",
+    "ingredients": ["Chicken", "Rice", "Ginger", "Garlic", "Sesame oil"],
+    "calories": 380
+  },
+  {
+    "id": 86,
+    "name": "Emping",
+    "origin": "Indonesia",
+    "type": "Snack",
+    "ingredients": ["Melinjo nuts", "Salt", "Oil for frying"],
+    "calories": 150
+  },
+  {
+    "id": 87,
+    "name": "Fattoush",
+    "origin": "Lebanon",
+    "type": "Salad",
+    "ingredients": ["Bread", "Tomatoes", "Cucumbers", "Mint", "Sumac"],
+    "calories": 210
+  },
+  {
+    "id": 88,
+    "name": "Gado-Gado",
+    "origin": "Indonesia",
+    "type": "Salad",
+    "ingredients": ["Vegetables", "Tofu", "Tempeh", "Peanut sauce", "Egg"],
+    "calories": 350
+  },
+  {
+    "id": 89,
+    "name": "Hotteok",
+    "origin": "Korea",
+    "type": "Snack",
+    "ingredients": ["Flour", "Brown sugar", "Nuts", "Cinnamon", "Honey"],
+    "calories": 290
+  },
+  {
+    "id": 90,
+    "name": "Injera",
+    "origin": "Ethiopia",
+    "type": "Bread",
+    "ingredients": ["Teff flour", "Water", "Salt", "Yeast"],
+    "calories": 180
+  },
+  {
+    "id": 91,
+    "name": "Jerk Chicken",
+    "origin": "Jamaica",
+    "type": "Main Course",
+    "ingredients": ["Chicken", "Scotch bonnet peppers", "Allspice", "Thyme", "Garlic"],
+    "calories": 420
+  },
+  {
+    "id": 92,
+    "name": "Kouign-Amann",
+    "origin": "France",
+    "type": "Pastry",
+    "ingredients": ["Flour", "Butter", "Sugar", "Yeast", "Salt"],
+    "calories": 480
+  },
+  {
+    "id": 93,
+    "name": "Lángos",
+    "origin": "Hungary",
+    "type": "Snack",
+    "ingredients": ["Flour", "Yeast", "Sour cream", "Garlic", "Cheese"],
+    "calories": 380
+  },
+  {
+    "id": 94,
+    "name": "Manti",
+    "origin": "Turkey",
+    "type": "Dumpling",
+    "ingredients": ["Dough", "Ground lamb", "Yogurt", "Garlic", "Mint"],
+    "calories": 320
+  },
+  {
+    "id": 95,
+    "name": "Nasi Goreng",
+    "origin": "Indonesia",
+    "type": "Main Course",
+    "ingredients": ["Fried rice", "Shrimp paste", "Chicken", "Egg", "Krupuk"],
+    "calories": 550
+  },
+  {
+    "id": 96,
+    "name": "Osso Buco",
+    "origin": "Italy",
+    "type": "Main Course",
+    "ingredients": ["Veal shanks", "White wine", "Vegetables", "Gremolata", "Broth"],
+    "calories": 620
+  },
+  {
+    "id": 97,
+    "name": "Pirozhki",
+    "origin": "Russia",
+    "type": "Snack",
+    "ingredients": ["Yeast dough", "Ground meat", "Onions", "Eggs", "Potatoes"],
+    "calories": 280
+  },
+  {
+    "id": 98,
+    "name": "Quiche Lorraine",
+    "origin": "France",
+    "type": "Main Course",
+    "ingredients": ["Pie crust", "Eggs", "Cream", "Bacon", "Cheese"],
+    "calories": 520
+  },
+  {
+    "id": 99,
+    "name": "Risotto",
+    "origin": "Italy",
+    "type": "Main Course",
+    "ingredients": ["Arborio rice", "Broth", "Parmesan", "White wine", "Mushrooms"],
+    "calories": 480
+  },
+  {
+    "id": 100,
+    "name": "Stroopwafel",
+    "origin": "Netherlands",
+    "type": "Dessert",
+    "ingredients": ["Waffle", "Caramel syrup", "Flour", "Butter", "Cinnamon"],
+    "calories": 310
+  }
+]
+
+
+
+

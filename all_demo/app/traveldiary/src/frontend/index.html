@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行日记</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 5px;
+        }
+        .success {
+            color: #2ecc71;
+            margin-top: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .diary-card, .spot-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .diary-card h3, .spot-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .diary-meta, .spot-meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        nav {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .spot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        .btn-success {
+            background-color: #2ecc71;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            flex: 1;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        .map-container {
+            height: 400px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .map-tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .map-tab {
+            padding: 8px 15px;
+            background: #eee;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* 美食卡片样式 */
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.food-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.food-card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.food-meta {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.food-ingredients {
+    font-style: italic;
+    color: #555;
+}
+
+.filter-box {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-box input {
+    width: 100px;
+}
+        .map-tab.active {
+            background: #3498db;
+            color: white;
+        }
+        .ranging-tool {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background-color: white;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        .ranging-tool button {
+            margin-right: 10px;
+        }
+         .path-result {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .path-step {
+        margin: 5px 0;
+        padding: 8px;
+        background-color: #e8f4f8;
+        border-radius: 4px;
+    }
+    </style>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" type="text/css">
+    <script src="https://webapi.amap.com/maps?v=2.0&key=508cb050cc0474f0b6e499210468a606&plugin=AMap.RangingTool"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ 我的旅行日记</h1>
+        
+        <nav>
+            <div id="auth-section">
+                <div id="login-form" class="section">
+                    <h3>登录</h3>
+                    <div class="form-group">
+                        <label for="login-username">用户名</label>
+                        <input type="text" id="login-username" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">密码</label>
+                        <input type="password" id="login-password" placeholder="请输入密码">
+                    </div>
+                    <button onclick="login()">登录</button>
+                    <p id="login-error" class="error"></p>
+                </div>
+                
+                <div id="register-form" class="section">
+                    <h3>注册</h3>
+                    <div class="form-group">
+                        <label for="register-username">用户名</label>
+                        <input type="text" id="register-username" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">密码</label>
+                        <input type="password" id="register-password" placeholder="请输入密码">
+                    </div>
+                    <button onclick="register()">注册</button>
+                    <p id="register-error" class="error"></p>
+                </div>
+            </div>
+            
+            <div id="user-info" class="user-info hidden">
+                <span>欢迎, <span id="current-user"></span></span>
+                <button onclick="logout()">退出登录</button>
+            </div>
+        </nav>
+        
+        <div id="main-content" class="hidden">
+            <div class="tab-buttons">
+                <button class="active" onclick="switchTab('spot-search')">景区查询</button>
+                <button onclick="switchTab('diary-create')">写日记</button>
+                <button onclick="switchTab('diary-list')">我的日记</button>
+                <button onclick="switchTab('path-finder')">路径导航</button>
+                <button onclick="switchTab('food-search')">美食搜索</button> 
+            </div>
+            
+            <!-- 景区查询 -->
+            <div id="spot-search" class="tab-content active">
+                <div class="map-tabs">
+                    <div class="map-tab active" onclick="switchMapView('list')">列表视图</div>
+                    <div class="map-tab" onclick="switchMapView('map')">地图视图</div>
+                </div>
+                
+                <div id="map-view" class="hidden">
+                    <div id="map-container" class="map-container"></div>
+                    <div id="map-spots-list" class="spot-grid"></div>
+                    
+                    <div class="ranging-tool">
+                        <div id="info">
+                            点击地图获取量测点，右键或双击左键结束测量
+                        </div>
+                        <div class="input-item">
+                            <input type="button" class="btn" id='default' value="默认样式测距" style='margin-right: 1rem;'/>
+                            <input type="button" class="btn" id='custom' value="自定义样式测距"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="list-view">
+                    <div class="search-box">
+                        <input type="text" id="spot-search-input" placeholder="输入景区名称或地点">
+                        <button onclick="searchSpots()">搜索</button>
+                    </div>
+                    <div id="spots-list" class="spot-grid"></div>
+                </div>
+            </div>
+            
+
+            <div id="path-finder" class="tab-content">
+    <div class="section">
+        <h2>景区路径导航</h2>
+        <div class="form-group">
+            <label for="scenic-id">景区编号</label>
+            <input type="number" id="scenic-id" min="1" max="200" placeholder="1-200">
+        </div>
+        <div class="form-group">
+            <label for="start-point">起点编号</label>
+            <input type="number" id="start-point" min="1" max="70" placeholder="1-70">
+        </div>
+        <div class="form-group">
+            <label for="end-point">终点编号</label>
+            <input type="number" id="end-point" min="1" max="70" placeholder="1-70">
+        </div>
+        <button onclick="findPath()">查找路径</button>
+        <div id="path-result" class="path-result"></div>
+    </div>
+</div>
+
+
+            <!-- 创建日记 -->
+            <div id="diary-create" class="tab-content">
+                <div class="section">
+                    <h2>创建新日记</h2>
+                    <div class="form-group">
+                        <label for="diary-title">标题</label>
+                        <input type="text" id="diary-title" placeholder="日记标题">
+                    </div>
+                    <div class="form-group">
+                        <label for="diary-spot">关联景区</label>
+                        <select id="diary-spot">
+                            <option value="">-- 选择景区 --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="diary-content">内容</label>
+                        <textarea id="diary-content" placeholder="写下你的旅行故事..."></textarea>
+                    </div>
+                    <button id="save-diary-btn" onclick="createDiary()">保存日记</button>
+                    <p id="diary-error" class="error"></p>
+                </div>
+            </div>
+            
+                <!-- 美食搜索 -->
+<div id="food-search" class="tab-content">
+    <div class="section">
+        <h2>美食搜索</h2>
+        <div class="search-box">
+            <input type="text" id="food-keyword" placeholder="输入美食名称、国家或食材">
+            <button onclick="searchFoods()">搜索</button>
+        </div>
+        <div class="filter-box">
+            <label for="max-calories">最大卡路里:</label>
+            <input type="number" id="max-calories" min="0" placeholder="不限">
+            <button onclick="filterByCalories()">筛选</button>
+        </div>
+        <div id="foods-list" class="food-grid"></div>
+    </div>
+</div>
+
+            <!-- 日记列表 -->
+            <div id="diary-list" class="tab-content">
+                <div class="section">
+                    <h2>我的日记</h2>
+                    <div id="diaries-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 时间格式化函数
+        function formatDateTime(dateTime) {
+            if (!dateTime) return '未知时间';
+            
+            try {
+                // 如果是字符串格式
+                if (typeof dateTime === 'string') {
+                    // 处理ISO格式 (如 "2023-05-15T12:34:56Z")
+                    if (dateTime.includes('T')) {
+                        dateTime = new Date(dateTime);
+                    }
+                    // 处理后端返回的格式 (如 "2023-05-15 12:34:56")
+                    else if (dateTime.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)) {
+                        dateTime = new Date(dateTime.replace(' ', 'T') + 'Z');
+                    }
+                }
+                
+                // 如果是时间戳数字
+                if (typeof dateTime === 'number') {
+                    dateTime = new Date(dateTime);
+                }
+                
+                // 格式化日期时间
+                if (dateTime instanceof Date) {
+                    return dateTime.toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    });
+                }
+                
+                return dateTime; // 如果无法处理，返回原始值
+            } catch (e) {
+                console.error('格式化时间错误:', e);
+                return dateTime; // 如果出错，返回原始值
+            }
+        }
+
+        const API_BASE = 'http://localhost:8080/api';
+        let currentUser = null;
+        let authToken = null;
+        let allSpots = [];
+        let currentEditingDiaryId = null;
+        let map = null; // 地图实例
+        let markers = []; // 地图标记数组
+        let ruler1, ruler2;
+
+        // 初始化加载景区列表
+        document.addEventListener('DOMContentLoaded', () => {
+            loadScenicSpots();
+            initMap();
+        });
+
+        // 全局变量
+let allFoods = [];
+
+// 在DOM加载时加载所有食物
+document.addEventListener('DOMContentLoaded', () => {
+    loadScenicSpots();
+    initMap();
+    loadAllFoods(); // 新增：加载所有食物
+});
+
+// 加载所有食物
+async function loadAllFoods() {
+    try {
+        const response = await fetch(`${API_BASE}/foods`);
+        if (!response.ok) throw new Error('获取美食列表失败');
+        allFoods = await response.json();
+    } catch (error) {
+        console.error('加载美食列表失败:', error);
+    }
+}
+
+// 搜索食物
+async function searchFoods() {
+    const keyword = document.getElementById('food-keyword').value.trim();
+    const foodsList = document.getElementById('foods-list');
+    
+    if (!keyword) {
+        renderFoods(allFoods);
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/foods/search?keyword=${encodeURIComponent(keyword)}`);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || '搜索美食失败');
+        }
+        
+        const foods = await response.json();
+        renderFoods(foods);
+    } catch (error) {
+        foodsList.innerHTML = `<p class="error">${error.message}</p>`;
+    }
+}
+
+// 按卡路里筛选
+async function filterByCalories() {
+    const maxCalories = document.getElementById('max-calories').value;
+    const foodsList = document.getElementById('foods-list');
+    
+    if (!maxCalories) {
+        renderFoods(allFoods);
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/foods/calories?max=${maxCalories}`);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || '筛选美食失败');
+        }
+        
+        const foods = await response.json();
+        renderFoods(foods);
+    } catch (error) {
+        foodsList.innerHTML = `<p class="error">${error.message}</p>`;
+    }
+}
+
+// 渲染食物列表
+function renderFoods(foods) {
+    const foodsList = document.getElementById('foods-list');
+    
+    if (!foods || foods.length === 0) {
+        foodsList.innerHTML = '<p>没有找到相关美食</p>';
+        return;
+    }
+    
+    let html = '';
+    foods.forEach(food => {
+        html += `
+            <div class="food-card">
+                <h3>${food.name}</h3>
+                <div class="food-meta">
+                    <span>国家: ${food.origin}</span> | 
+                    <span>类型: ${food.type}</span> | 
+                    <span>卡路里: ${food.calories}</span>
+                </div>
+                <div class="food-ingredients">
+                    食材: ${food.ingredients.join(', ')}
+                </div>
+            </div>
+        `;
+    });
+    
+    foodsList.innerHTML = html;
+}
+
+// 在switchTab函数中添加对food-search的处理
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-buttons button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    document.getElementById(tabId).classList.add('active');
+    document.querySelector(`.tab-buttons button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+    
+    if (tabId === 'diary-list') {
+        loadUserDiaries();
+    } else if (tabId === 'spot-search') {
+        renderSpots(allSpots);
+    } else if (tabId === 'diary-create') {
+        resetDiaryForm();
+    } else if (tabId === 'food-search') {
+        renderFoods(allFoods); // 切换到美食标签时渲染所有食物
+    }
+}
+
+        function initMap() {
+            map = new AMap.Map('map-container', {
+                viewMode: '2D',
+                zoom: 11,
+                center: [116.397428, 39.90923] // 默认北京中心点
+            });
+            
+            // 地图加载完成后初始化测距工具
+            map.on('complete', initRangingTool);
+        }
+
+        function initRangingTool() {
+            // 默认样式
+            ruler1 = new AMap.RangingTool(map);
+    
+            // 自定义样式
+            var startMarkerOptions = {
+                icon: new AMap.Icon({
+                    size: new AMap.Size(19, 31),//图标大小
+                    imageSize: new AMap.Size(19, 31),
+                    image: "//webapi.amap.com/theme/v1.3/markers/b/start.png"
+                }),
+                offset: new AMap.Pixel(-9, -31)
+            };
+            var endMarkerOptions = {
+                icon: new AMap.Icon({
+                    size: new AMap.Size(19, 31),//图标大小
+                    imageSize: new AMap.Size(19, 31),
+                    image: "//webapi.amap.com/theme/v1.3/markers/b/end.png"
+                }),
+                offset: new AMap.Pixel(-9, -31)
+            };
+            var midMarkerOptions = {
+                icon: new AMap.Icon({
+                    size: new AMap.Size(19, 31),//图标大小
+                    imageSize: new AMap.Size(19, 31),
+                    image: "//webapi.amap.com/theme/v1.3/markers/b/mid.png"
+                }),
+                offset: new AMap.Pixel(-9, -31)
+            };
+            var lineOptions = {
+                strokeStyle: "solid",
+                strokeColor: "#FF33FF",
+                strokeOpacity: 1,
+                strokeWeight: 2
+            };
+            var rulerOptions = {
+                startMarkerOptions: startMarkerOptions,
+                midMarkerOptions: midMarkerOptions,
+                endMarkerOptions: endMarkerOptions,
+                lineOptions: lineOptions
+            };
+            ruler2 = new AMap.RangingTool(map, rulerOptions);
+    
+            // 启用默认样式测距
+            document.getElementById('default').onclick = function() {
+                ruler2.turnOff();
+                ruler1.turnOn();
+            }
+            
+            // 启用自定义样式测距
+            document.getElementById('custom').onclick = function() {
+                ruler1.turnOff();
+                ruler2.turnOn();
+            }
+        }
+
+        function switchMapView(view) {
+            if (view === 'map') {
+                document.getElementById('list-view').classList.add('hidden');
+                document.getElementById('map-view').classList.remove('hidden');
+                document.querySelector('.map-tab[onclick="switchMapView(\'list\')"]').classList.remove('active');
+                document.querySelector('.map-tab[onclick="switchMapView(\'map\')"]').classList.add('active');
+                updateMapMarkers();
+                
+                // 确保地图容器尺寸正确后重绘
+                setTimeout(() => {
+                    map.resize();
+                }, 100);
+            } else {
+                document.getElementById('list-view').classList.remove('hidden');
+                document.getElementById('map-view').classList.add('hidden');
+                document.querySelector('.map-tab[onclick="switchMapView(\'list\')"]').classList.add('active');
+                document.querySelector('.map-tab[onclick="switchMapView(\'map\')"]').classList.remove('active');
+            }
+        }
+
+        function updateMapMarkers() {
+            // 清除旧标记
+            markers.forEach(marker => {
+                map.remove(marker);
+            });
+            markers = [];
+            
+            // 添加新标记
+            const spotsList = document.getElementById('map-spots-list');
+            spotsList.innerHTML = '';
+            
+            if (allSpots.length === 0) {
+                spotsList.innerHTML = '<p>没有找到相关景区</p>';
+                return;
+            }
+            
+            allSpots.forEach(spot => {
+                if (spot.longitude && spot.latitude) {
+                    const marker = new AMap.Marker({
+                        position: new AMap.LngLat(parseFloat(spot.longitude), parseFloat(spot.latitude)),
+                        title: spot.name,
+                        map: map
+                    });
+                    
+                    // 点击标记显示信息
+                    marker.on('click', () => {
+                        const infoWindow = new AMap.InfoWindow({
+                            content: `<div style="padding:5px;">
+                                <h4>${spot.name}</h4>
+                                <p>地点: ${spot.location || '未知'}</p>
+                                ${spot.rating ? `<p>评分: ${spot.rating}/5</p>` : ''}
+                                <button onclick="createDiaryForSpot('${spot.id}')" style="margin-top:5px;">为此景区写日记</button>
+                            </div>`
+                        });
+                        infoWindow.open(map, marker.getPosition());
+                    });
+                    
+                    markers.push(marker);
+                }
+                
+                // 同时在地图下方显示列表
+                const spotCard = document.createElement('div');
+                spotCard.className = 'spot-card';
+                spotCard.innerHTML = `
+                    <h3>${spot.name}</h3>
+                    <div class="spot-meta">
+                        <span>地点: ${spot.location || '未知'}</span>
+                        ${spot.rating ? `| <span>评分: ${spot.rating}/5</span>` : ''}
+                    </div>
+                    <p>${spot.description || '暂无描述'}</p>
+                    <div class="action-buttons">
+                        <button class="btn-success" onclick="createDiaryForSpot('${spot.id}')">为此景区写日记</button>
+                    </div>
+                `;
+                spotsList.appendChild(spotCard);
+            });
+            
+            // 如果有标记，调整地图视野
+            if (markers.length > 0) {
+                map.setFitView();
+            }
+        }
+
+        // 切换标签页
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-buttons button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            
+            if (tabId === 'diary-list') {
+                loadUserDiaries();
+            } else if (tabId === 'spot-search') {
+                renderSpots(allSpots);
+            } else if (tabId === 'diary-create') {
+                resetDiaryForm();
+            }
+        }
+
+        // 重置日记表单
+        function resetDiaryForm() {
+            document.getElementById('diary-title').value = '';
+            document.getElementById('diary-content').value = '';
+            document.getElementById('diary-spot').value = '';
+            document.getElementById('diary-error').textContent = '';
+            document.getElementById('save-diary-btn').textContent = '保存日记';
+            document.getElementById('save-diary-btn').onclick = createDiary;
+            currentEditingDiaryId = null;
+        }
+
+        // 加载景区列表
+        async function loadScenicSpots() {
+            try {
+                const response = await fetch(`${API_BASE}/spots`);
+                if (!response.ok) throw new Error('获取景区列表失败');
+                
+                allSpots = await response.json();
+                renderSpots(allSpots);
+                updateMapMarkers();
+                
+                // 填充下拉菜单
+                const spotSelect = document.getElementById('diary-spot');
+                spotSelect.innerHTML = '<option value="">-- 选择景区 --</option>';
+                allSpots.forEach(spot => {
+                    const option = document.createElement('option');
+                    option.value = spot.id;
+                    option.textContent = spot.name;
+                    spotSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('加载景区列表失败:', error);
+            }
+        }
+
+        // 搜索景区
+        function searchSpots() {
+            const keyword = document.getElementById('spot-search-input').value.toLowerCase();
+            if (!keyword) {
+                renderSpots(allSpots);
+                return;
+            }
+            
+            const filtered = allSpots.filter(spot => 
+                spot.name.toLowerCase().includes(keyword) || 
+                (spot.location && spot.location.toLowerCase().includes(keyword))
+            );
+            renderSpots(filtered);
+        }
+
+        // 渲染景区列表
+        function renderSpots(spots) {
+            const spotsList = document.getElementById('spots-list');
+            spotsList.innerHTML = '';
+            
+            if (spots.length === 0) {
+                spotsList.innerHTML = '<p>没有找到相关景区</p>';
+                return;
+            }
+            
+            spots.forEach(spot => {
+                const spotCard = document.createElement('div');
+                spotCard.className = 'spot-card';
+                spotCard.innerHTML = `
+                    <h3>${spot.name}</h3>
+                    <div class="spot-meta">
+                        <span>地点: ${spot.location || '未知'}</span>
+                        ${spot.rating ? `| <span>评分: ${spot.rating}/5</span>` : ''}
+                    </div>
+                    <p>${spot.description || '暂无描述'}</p>
+                    <div class="action-buttons">
+                        <button class="btn-success" onclick="createDiaryForSpot('${spot.id}')">为此景区写日记</button>
+                    </div>
+                `;
+                spotsList.appendChild(spotCard);
+            });
+        }
+
+        // 为特定景区创建日记
+        function createDiaryForSpot(spotId) {
+            const spot = allSpots.find(s => s.id === spotId);
+            if (spot) {
+                switchTab('diary-create');
+                document.getElementById('diary-spot').value = spotId;
+                document.getElementById('diary-title').focus();
+            }
+        }
+
+
+
+
+        // 添加路径查找函数
+async function findPath() {
+    const scenicId = document.getElementById('scenic-id').value;
+    const start = document.getElementById('start-point').value;
+    const end = document.getElementById('end-point').value;
+    const resultDiv = document.getElementById('path-result');
+    
+    if (!scenicId || !start || !end) {
+        resultDiv.innerHTML = '<p class="error">请填写所有字段</p>';
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/map/path?scenicId=${scenicId}&start=${start}&end=${end}`);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || '查找路径失败');
+        }
+        
+        const path = await response.json();
+        renderPathResult(path);
+    } catch (error) {
+        resultDiv.innerHTML = `<p class="error">${error.message}</p>`;
+    }
+}
+
+// 渲染路径结果
+function renderPathResult(path) {
+    const resultDiv = document.getElementById('path-result');
+    
+    if (!path || path.length === 0) {
+        resultDiv.innerHTML = '<p>未找到有效路径</p>';
+        return;
+    }
+    
+    let html = '<h3>导航路径:</h3>';
+    html += '<div class="path-steps">';
+    
+    path.forEach((point, index) => {
+        html += `
+            <div class="path-step">
+                ${index === 0 ? '起点' : 
+                 index === path.length-1 ? '终点' : 
+                 `第${index}站`}: 建筑 ${point}
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    resultDiv.innerHTML = html;
+}
+        // 用户注册
+        async function register() {
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+            const errorEl = document.getElementById('register-error');
+            
+            if (!username || !password) {
+                errorEl.textContent = '用户名和密码不能为空';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || '注册失败');
+                }
+                
+                const user = await response.json();
+                errorEl.textContent = '';
+                alert('注册成功，请登录');
+                document.getElementById('register-username').value = '';
+                document.getElementById('register-password').value = '';
+            } catch (error) {
+                errorEl.textContent = error.message;
+            }
+        }
+
+        // 用户登录
+        async function login() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            const errorEl = document.getElementById('login-error');
+            
+            if (!username || !password) {
+                errorEl.textContent = '用户名和密码不能为空';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || '登录失败');
+                }
+                
+                const result = await response.json();
+                currentUser = result.username;
+                authToken = result.token;
+                
+                // 更新UI
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('user-info').classList.remove('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('current-user').textContent = currentUser;
+                
+                // 加载用户日记
+                loadUserDiaries();
+            } catch (error) {
+                errorEl.textContent = error.message;
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            currentUser = null;
+            authToken = null;
+            
+            // 重置UI
+            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('user-info').classList.add('hidden');
+            document.getElementById('main-content').classList.add('hidden');
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').textContent = '';
+        }
+
+        // 创建日记
+        async function createDiary() {
+    if (!currentUser) return;
+    
+    const title = document.getElementById('diary-title').value.trim();
+    const content = document.getElementById('diary-content').value.trim();
+    const spotId = document.getElementById('diary-spot').value;
+    const errorEl = document.getElementById('diary-error');
+    const saveBtn = document.getElementById('save-diary-btn');
+    
+    if (!title || !content) {
+        errorEl.textContent = '标题和内容不能为空';
+        return;
+    }
+    
+    // 验证景区ID
+    if (spotId && !allSpots.some(spot => spot.id === spotId)) {
+        errorEl.textContent = '选择的景区不存在，请重新选择';
+        return;
+    }
+    
+    saveBtn.disabled = true;
+    saveBtn.textContent = '保存中...';
+    
+    try {
+        const response = await fetch(`${API_BASE}/diaries`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': authToken ? `Bearer ${authToken}` : '' 
+            },
+            body: JSON.stringify({ 
+                title, 
+                content, 
+                scenicSpot: spotId,
+                author: currentUser
+            })
+        });
+        
+        // 处理HTTP错误
+        if (!response.ok) {
+            const contentType = response.headers.get('content-type');
+            let errorData;
+            
+            if (contentType && contentType.includes('application/json')) {
+                errorData = await response.json();
+            } else {
+                errorData = { message: await response.text() };
+            }
+            
+            throw new Error(errorData.message || '创建日记失败');
+        }
+        
+        errorEl.textContent = '';
+        alert('日记创建成功！');
+        resetDiaryForm();
+        switchTab('diary-list');
+    } catch (error) {
+        errorEl.textContent = error.message;
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '保存日记';
+    }
+}
+
+        // 加载用户日记
+        async function loadUserDiaries() {
+    if (!currentUser) {
+        console.error('当前用户未登录，无法加载日记');
+        renderDiariesError('请先登录以查看日记');
+        return;
+    }
+    
+    const diariesList = document.getElementById('diaries-list');
+    diariesList.innerHTML = '<div class="loading">加载中...</div>';
+    
+    try {
+        const url = new URL(`${API_BASE}/diaries`);
+        url.searchParams.append('author', currentUser);
+        
+        const response = await fetch(url, {
+            headers: { 
+                'Authorization': authToken ? `Bearer ${authToken}` : '',
+                'Accept': 'application/json'
+            }
+        });
+        
+        // 处理HTTP错误
+        if (!response.ok) {
+            // 检查响应内容类型
+            const contentType = response.headers.get('content-type');
+            let errorData;
+            
+            if (contentType && contentType.includes('application/json')) {
+                errorData = await response.json();
+            } else {
+                // 非JSON格式响应（如纯文本）
+                errorData = { message: await response.text() };
+            }
+            
+            throw new Error(`API错误 (${response.status}): ${errorData.message || '请求格式不正确'}`);
+        }
+        
+        const diaries = await response.json();
+        renderDiaries(diaries);
+    } catch (error) {
+        console.error('加载日记失败:', error);
+        renderDiariesError(`加载日记失败: ${error.message}`);
+    }
+}
+
+
+        // 渲染错误信息
+        function renderDiariesError(message) {
+            const diariesList = document.getElementById('diaries-list');
+            diariesList.innerHTML = `<p class="error">${message}</p>`;
+        }
+
+        // 渲染日记列表
+        function renderDiaries(diaries) {
+            const diariesList = document.getElementById('diaries-list');
+            diariesList.innerHTML = '';
+            
+            if (diaries.length === 0) {
+                diariesList.innerHTML = '<p>暂无日记，开始记录你的旅行吧！</p>';
+                return;
+            }
+            
+            diaries.forEach(diary => {
+                const associatedSpot = allSpots.find(spot => spot.id === diary.scenicSpot);
+                const diaryCard = document.createElement('div');
+                diaryCard.className = 'diary-card';
+                diaryCard.innerHTML = `
+                    <h3>${diary.title || '无标题'}</h3>
+                    <div class="diary-meta">
+                        <span>景区: ${associatedSpot ? associatedSpot.name : '无'}</span> | 
+                        <span>时间: ${formatDateTime(diary.createTime)}</span>
+                    </div>
+                    <p>${diary.content || '无内容'}</p>
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="editDiary('${diary.id}')">编辑</button>
+                        <button class="btn-danger" onclick="deleteDiary('${diary.id}')">删除</button>
+                    </div>
+                `;
+                diariesList.appendChild(diaryCard);
+            });
+        }
+
+        // 编辑日记
+        async function editDiary(diaryId) {
+            try {
+                const response = await fetch(`${API_BASE}/diaries/${diaryId}`, {
+                    headers: { 
+                        'Authorization': authToken ? `Bearer ${authToken}` : '',
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || '获取日记详情失败');
+                }
+                
+                const diary = await response.json();
+                currentEditingDiaryId = diaryId;
+                
+                // 填充表单
+                document.getElementById('diary-title').value = diary.title || '';
+                document.getElementById('diary-content').value = diary.content || '';
+                document.getElementById('diary-spot').value = diary.scenicSpot || '';
+                
+                // 修改保存按钮
+                const saveBtn = document.getElementById('save-diary-btn');
+                saveBtn.textContent = '更新日记';
+                saveBtn.onclick = updateDiary;
+                
+                // 切换到创建标签页
+                switchTab('diary-create');
+                
+                // 滚动到顶部
+                window.scrollTo(0, 0);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        // 更新日记
+        async function updateDiary() {
+    if (!currentEditingDiaryId) return;
+    
+    const title = document.getElementById('diary-title').value.trim();
+    const content = document.getElementById('diary-content').value.trim();
+    const spotId = document.getElementById('diary-spot').value;
+    const errorEl = document.getElementById('diary-error');
+    const saveBtn = document.getElementById('save-diary-btn');
+    
+    if (!title || !content) {
+        errorEl.textContent = '标题和内容不能为空';
+        return;
+    }
+    
+    // 验证景区ID
+    if (spotId && !allSpots.some(spot => spot.id === spotId)) {
+        errorEl.textContent = '选择的景区不存在，请重新选择';
+        return;
+    }
+    
+    saveBtn.disabled = true;
+    saveBtn.textContent = '更新中...';
+    
+    try {
+        const response = await fetch(`${API_BASE}/diaries/${currentEditingDiaryId}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': authToken ? `Bearer ${authToken}` : '' 
+            },
+            body: JSON.stringify({ 
+                title, 
+                content, 
+                scenicSpot: spotId
+            })
+        });
+        
+        // 处理HTTP错误
+        if (!response.ok) {
+            const contentType = response.headers.get('content-type');
+            let errorData;
+            
+            if (contentType && contentType.includes('application/json')) {
+                errorData = await response.json();
+            } else {
+                errorData = { message: await response.text() };
+            }
+            
+            throw new Error(errorData.message || '更新日记失败');
+        }
+        
+        alert('日记更新成功！');
+        resetDiaryForm();
+        switchTab('diary-list');
+    } catch (error) {
+        errorEl.textContent = error.message;
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '更新日记';
+    }
+}
+
+        // 删除日记
+        async function deleteDiary(diaryId) {
+            if (!confirm('确定要删除这篇日记吗？此操作不可撤销！')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/diaries/${diaryId}`, {
+                    method: 'DELETE',
+                    headers: { 
+                        'Authorization': authToken ? `Bearer ${authToken}` : '' 
+                    }
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || '删除日记失败');
+                }
+                
+                // 重新加载日记列表
+                loadUserDiaries();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+    </script>
+</body>
+</html>
