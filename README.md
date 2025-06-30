@@ -1,7 +1,7 @@
 # Travel-Diary-System
-Course Design of Data Structure,BUPT,the end of 2nd Grad,Network Engineering
+all_demo中的文件代码是完整且可以运行的源代码，其中travel是控制台版本，traveldiary是可执行的前端版本
+目前由于一些原因导致traveldiray无法创建日记，其余功能正常
+整个all_demo文件夹需要放到D盘根目录下，即D:\all_demo
+all_demo文件夹以及内部文件尽量不要修改名称，可能会导致数据的路径问题
+由于代码是由java语言编写，需要有java环境
 
-The file needs to be decompressed on the D drive.
-The front-end cannot add diaries, but the console version can.
-I have used Gaode Map support. Please apply for Gaode Map API yourself and replace my API in the file.
-This code serves as a reference for younger students.
